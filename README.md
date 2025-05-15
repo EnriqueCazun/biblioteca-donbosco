@@ -16,5 +16,5 @@
   - Tablas dinámicas y formularios validados  
 
 ## 🔧 Configuración:
-- Editar DatabaseConfig.java y conexion con tus credenciales
+- Editar DatabaseConfig.java y conexion.java con tus credenciales
 - Importar proyecto como Maven en tu IDE favorito
