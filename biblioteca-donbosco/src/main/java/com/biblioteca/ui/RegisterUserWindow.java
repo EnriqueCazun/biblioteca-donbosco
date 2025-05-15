@@ -124,7 +124,6 @@ public class RegisterUserWindow extends JFrame {
         registrarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Validaciones y lógica para registrar usuario
                 String nombre = nombreField.getText().trim();
                 String apellido = apellidoField.getText().trim();
                 String carnet = carnetField.getText().trim();
@@ -143,7 +142,6 @@ public class RegisterUserWindow extends JFrame {
                     return;
                 }
 
-                // Llamada al método para registrar usuario en la base de datos
                 if (registrarUsuario(nombre, apellido, carnet, pass)) {
                     JOptionPane.showMessageDialog(null, "Usuario registrado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                     logger.info("Usuario registrado exitosamente: " + carnet);
@@ -180,11 +178,11 @@ public class RegisterUserWindow extends JFrame {
             stmt.setString(1, nombre);
             stmt.setString(2, apellido);
             stmt.setString(3, carnet);
-            stmt.setString(4, password); // Aquí es donde se guarda la contraseña (deberías encriptarla antes)
+            stmt.setString(4, password);
             stmt.setString(5, rolComboBox.getSelectedItem().toString());
 
             int filasAfectadas = stmt.executeUpdate();
-            return filasAfectadas > 0; // Si se registró el usuario
+            return filasAfectadas > 0;
         } catch (SQLException e) {
             logger.error("Error al registrar el usuario en la base de datos: " + e.getMessage());
             return false;
