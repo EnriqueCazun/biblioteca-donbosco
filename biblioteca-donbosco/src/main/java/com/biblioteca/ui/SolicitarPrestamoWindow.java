@@ -83,13 +83,24 @@ public class SolicitarPrestamoWindow extends JFrame {
         int filaSeleccionada = librosTable.getSelectedRow();
 
         if (filaSeleccionada == -1) {
-            JOptionPane.showMessageDialog(this, "Selecciona un libro para solicitar el préstamo.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Selecciona un libro para solicitar el préstamo.",
+                    "Advertencia", JOptionPane.WARNING_MESSAGE);
             logger.warn("Intento de solicitud sin seleccionar libro por parte del usuario: {}", carnetUsuario);
             return;
         }
 
         int libroId = (int) tableModel.getValueAt(filaSeleccionada, 0);
         String tituloLibro = (String) tableModel.getValueAt(filaSeleccionada, 1);
+
+        // Verificar préstamo activo idéntico
+        boolean yaPrestado = prestamoDAO.tienePrestamoActivo(carnetUsuario, libroId);
+        if (yaPrestado) {
+            JOptionPane.showMessageDialog(this,
+                    "Ya tienes un préstamo activo de este libro (" + tituloLibro + ").",
+                    "Operación no permitida", JOptionPane.WARNING_MESSAGE);
+            logger.warn("Usuario {} intentó solicitar de nuevo el libro ID {}", carnetUsuario, libroId);
+            return;
+        }
 
         int confirm = JOptionPane.showConfirmDialog(
                 this,
@@ -107,11 +118,13 @@ public class SolicitarPrestamoWindow extends JFrame {
                     logger.info("Préstamo exitoso para el usuario {} y libro ID {}", carnetUsuario, libroId);
                     cargarLibrosDisponibles();
                 } else {
-                    JOptionPane.showMessageDialog(this, "No se pudo realizar el préstamo. Verifica disponibilidad o errores en la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this,
+                            "No se pudo realizar el préstamo. Verifica disponibilidad o errores en la base de datos.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
                     logger.warn("Fallo al crear préstamo para el usuario {} y libro ID {}", carnetUsuario, libroId);
                 }
             } catch (Exception ex) {
-                logger.error("Error al procesar el préstamo para el usuario " + carnetUsuario, ex);
+                logger.error("Error al procesar el préstamo para el usuario {}", carnetUsuario, ex);
                 JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado. Consulta los logs.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
