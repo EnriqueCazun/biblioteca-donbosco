@@ -80,6 +80,29 @@ public class PrestamoDAO {
         return lista;
     }
 
+    /**
+     * Verifica si el usuario ya tiene un préstamo activo para el libro dado.
+     */
+    public boolean tienePrestamoActivo(String carnetUsuario, int libroId) {
+        String sql = "SELECT COUNT(*) FROM prestamos p " +
+                     "JOIN usuarios u ON p.usuario_id = u.id " +
+                     "WHERE u.carnet = ? AND p.libro_id = ? AND p.fecha_devolucion IS NULL";
+        try (Connection con = Conexion.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, carnetUsuario);
+            ps.setInt(2, libroId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Error en tienePrestamoActivo usuario={} libroId={}", carnetUsuario, libroId, e);
+        }
+        // En caso de error, devolvemos true para prevenir duplicados
+        return true;
+    }
+
     public boolean crearPrestamo(String carnetUsuario, int libroId) {
         String insertPrestamo =
             "INSERT INTO prestamos (usuario_id, libro_id, fecha_prestamo) " +
