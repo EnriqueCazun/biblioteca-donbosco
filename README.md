@@ -1,7 +1,7 @@
-# 📚 Sistema de Gestión de Bibliotecas - Don Bosco  
+# Sistema de Gestión de Bibliotecas - Don Bosco  
 **Aplicación Java Swing con SQL Server para administrar préstamos, usuarios y materiales bibliotecarios**
 
-## 🌟 Características Principales  
+## Características Principales  
 - **Roles Multiples**:  
   - Administradores: Gestionan usuarios, materiales y auditorías  
   - Profesores/Alumnos: Solicitan préstamos y consultan su historial  
@@ -15,6 +15,6 @@
   - 15+ ventanas interactivas con diseño responsive  
   - Tablas dinámicas y formularios validados  
 
-## 🔧 Configuración:
+## Configuración:
 - Editar DatabaseConfig.java y conexion.java con tus credenciales
 - Importar proyecto como Maven en tu IDE favorito
