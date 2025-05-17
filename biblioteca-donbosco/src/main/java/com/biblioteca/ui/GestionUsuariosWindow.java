@@ -97,7 +97,7 @@ public class GestionUsuariosWindow extends JFrame {
         tableModel.setRowCount(0);
         List<Usuario> usuarios = usuarioDAO.getAllUsuarios();
         for (Usuario usuario : usuarios) {
-            tableModel.addRow(new Object[] {
+            tableModel.addRow(new Object[]{
                     usuario.getCarnet(),
                     usuario.getNombre() + " " + usuario.getApellido(),
                     usuario.getRol()
@@ -175,6 +175,16 @@ public class GestionUsuariosWindow extends JFrame {
 
         String carnet = (String) tableModel.getValueAt(filaSeleccionada, 0);
 
+        // 1) Verificar si tiene préstamos asociados
+        if (usuarioDAO.tienePrestamos(carnet)) {
+            JOptionPane.showMessageDialog(this,
+                "No se puede eliminar el usuario con carnet " + carnet +
+                " porque tiene préstamos asociados.",
+                "Operación no permitida", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 2) Confirmar eliminación
         int confirm = JOptionPane.showConfirmDialog(this,
                 "¿Estás seguro de que deseas eliminar al usuario con carnet: " + carnet + "?",
                 "Confirmar eliminación",
@@ -182,7 +192,6 @@ public class GestionUsuariosWindow extends JFrame {
 
         if (confirm == JOptionPane.YES_OPTION) {
             boolean exito = usuarioDAO.eliminarUsuario(carnet);
-
             if (exito) {
                 JOptionPane.showMessageDialog(this, "Usuario eliminado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 limpiarCampos();
